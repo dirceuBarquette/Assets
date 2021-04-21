@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 2aa0a6586ffd1e0151f19f3e95a5f792c1695b62afa157c6d76ebc2c7d18d990
+-- hash: cb50fe425a0078ecdd3aa819446ab876dc4f62371542d782d47b3c6af1f2f402
 
 name:           Assets
 version:        0.1.0.0
@@ -61,5 +61,6 @@ test-suite Assets-test
   build-depends:
       Assets
     , base >=4.7 && <5
+    , hspec
     , time
   default-language: Haskell2010

@@ -6,11 +6,12 @@ module Lib
     , fTotal
     , fAvg
     , someFunc
+    , OpType(..)
+    , Register(..)
     ) where
 
 import System.IO ()
 import Data.Time (Day)
-import Data.Time.Format ()
 
 type Ticker = String
 data OpType = COMPRA | VENDA deriving (Show, Read, Eq)
@@ -20,7 +21,7 @@ data Register  = Register { ticker   :: Ticker
                           , opType   :: OpType 
                           , quantity :: Int
                           , value    :: Double
-                          } deriving (Show)
+                          } deriving (Show, Eq)
 
 getRecords :: FilePath -> IO [Register]
 getRecords path = do
