@@ -5,6 +5,8 @@ module Lib
     , fBo
     , fTotal
     , fAvg
+    , r2L
+    , saveRegs2File
     , someFunc
     , OpType(..)
     , Register(..)
@@ -34,6 +36,21 @@ getRecords path = do
                                   (read (x !! 3) :: Int)
                                   (read (x !! 4) :: Double)) ws
    return regs
+
+reg2Lists :: [Register] -> [String]
+reg2Lists = map (\reg -> unwords $ 
+                  [ show (date reg)
+                  , show (opType reg)
+                  , ticker reg
+                  , show (quantity reg)
+                  , show (value reg)
+                  ])
+
+r2L :: Functor f => f [Register] -> f [String]
+r2L = fmap reg2Lists
+
+saveRegs2File :: FilePath -> IO [String] -> IO ()
+saveRegs2File path r2l = fmap unlines r2l >>= writeFile path
 
 filterByOpType :: String -> [Register] -> [Register]
 filterByOpType "" regs = regs
