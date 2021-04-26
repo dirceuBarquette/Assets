@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: cb50fe425a0078ecdd3aa819446ab876dc4f62371542d782d47b3c6af1f2f402
+-- hash: 6f9bd2878fc72683694e636385cd5ba67cf2079ed8461f11b4452b087d8c284d
 
 name:           Assets
 version:        0.1.0.0
@@ -27,7 +27,10 @@ source-repository head
 
 library
   exposed-modules:
-      Lib
+      DataTypes
+      Filters
+      LibAssets
+      Reports
   other-modules:
       Paths_Assets
   hs-source-dirs:

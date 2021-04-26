@@ -1,17 +1,16 @@
 import Test.Hspec
 import Test.Hspec.QuickCheck
 import Data.Time (Day)
+import DataTypes (Register (..), OpType (..), Ticker, Summary)
 
-import Lib ( Register(..)
-           , OpType(COMPRA, VENDA)
-           , getRecords
-           , fBt
-           , fBd
-           , fBo
-           , fTotal
-           , fAvg
-           , r2L
-           ) 
+import LibAssets ( getRecords
+                 , fBt
+                 , fBd
+                 , fBo
+                 , fTotal
+                 , fAvg
+                 , r2L
+                 ) 
 
 rec = getRecords "test/examples/few_records.txt"
 
