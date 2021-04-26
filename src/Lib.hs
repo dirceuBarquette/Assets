@@ -8,14 +8,19 @@ module Lib
     , r2L
     , saveRegs2File
     , someFunc
+    , fSummarize
+    , summ2Lists
     , OpType(..)
     , Register(..)
     ) where
 
 import System.IO ()
+import Data.List (nub)
 import Data.Time (Day)
 
-type Ticker = String
+type Ticker  = String
+type Summary = [(Ticker,(Double, Int), Double, [Register])]
+
 data OpType = COMPRA | VENDA deriving (Show, Read, Eq)
 
 data Register  = Register { ticker   :: Ticker 
@@ -24,6 +29,36 @@ data Register  = Register { ticker   :: Ticker
                           , quantity :: Int
                           , value    :: Double
                           } deriving (Show, Eq)
+
+getTickers :: [Register] -> [Ticker]
+getTickers rl = 
+   let tks = fmap (\reg -> ticker reg) rl
+   in nub tks
+
+summ2Lists :: Summary -> [String]
+summ2Lists = fmap (\(tk, (tot, qtt), avg, regs) -> 
+                      tk ++ " "
+                      ++ (show qtt) ++ " "
+                      ++ (show $ truncate' tot 2) ++ " "
+                      ++ (show $ truncate' avg 2) ++ "\n"
+                      ++ ((take 80 $ repeat '=')::String) ++ "\n"
+                      ++ (concat $
+                           fmap (\reg ->
+                              (show (date reg)) ++ " "
+                              ++ (show (opType reg)) ++ " "
+                              ++ (show (quantity reg)) ++ " "
+                              ++ (show (value reg)) ++ "\n"
+                         ) regs)
+                  ) 
+
+summarize :: [Register] -> Summary
+summarize rec =
+   let tks = getTickers rec
+   in fmap (\tk -> let fbt = filterByTicker tk rec
+                   in (tk, total fbt, fst $ avg fbt, fbt)) tks 
+
+fSummarize :: Functor f => f [Register] -> f Summary
+fSummarize = fmap summarize
 
 getRecords :: FilePath -> IO [Register]
 getRecords path = do
@@ -36,6 +71,13 @@ getRecords path = do
                                   (read (x !! 3) :: Int)
                                   (read (x !! 4) :: Double)) ws
    return regs
+
+-- thx to
+-- stackoverflow.com/questions/18723381/
+-- rounding-to-specific-number-of-digits-in-haskell
+truncate' :: Double -> Int -> Double
+truncate' x n = (fromIntegral (floor (x * t))) / t
+    where t = 10^n
 
 reg2Lists :: [Register] -> [String]
 reg2Lists = map (\reg -> unwords $ 
@@ -80,7 +122,7 @@ fBt :: Functor f => String -> f [Register] -> f [Register]
 fBt tk = fmap (\x -> filterByTicker tk x)
 
 total :: [Register] -> (Double, Int)
-total = foldr (\reg (v,q) -> 
+total = foldl (\(v,q) reg -> 
                 let amount = fromIntegral (quantity reg) * value reg
                 in if opType reg == COMPRA then
                      (v + amount, q + (quantity reg))
@@ -91,24 +133,22 @@ total = foldr (\reg (v,q) ->
 fTotal :: Functor f => f [Register] -> f (Double, Int)
 fTotal = fmap total
 
+cv :: OpType -> (Double, Int) -> (Double, Int) -> (Double, Int)
+cv op (pm,q) (v,qop) = (pmf, qf)
+      where
+         qf  = if op == COMPRA then
+                  sum [q, qop]
+               else subtract qop q
+         pmf = 
+            case op of
+               COMPRA -> (sum [pm * (fromIntegral q), v * (fromIntegral qop)])
+                           / fromIntegral qf
+               VENDA  -> if not (qf == 0) then pm else 0
+         
 avg :: [Register] -> (Double, Int)
-avg = foldr (\reg (pm,q) -> let fIq  = fromIntegral q
-                                vReg = value reg
-                                qReg = quantity reg
-                                fqReg = fromIntegral qReg
-                            in 
-                              if opType reg == COMPRA then
-                                (
-                                  ((pm * fIq)
-                                  + (vReg * fqReg)) 
-                                  / fromIntegral (q + qReg)
-                                , 
-                                  q + qReg
-                                )
-                              else
-                                (pm, q - qReg)
-            )
-            (0,0)
+avg = foldl (\ (pm,q) reg-> 
+               cv (opType reg) (pm, q) (value reg, quantity reg)
+             ) (0, 0)
 
 fAvg :: Functor f => f [Register] -> f (Double, Int)
 fAvg = fmap avg

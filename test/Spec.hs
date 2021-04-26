@@ -23,7 +23,7 @@ spec = do
             ([Register {ticker = "GRND3"
                        , date = read "2019-07-23"::Day
                        , opType = COMPRA
-                       , quantity = 100
+                       , quantity = 200
                        , value = 7.73
                        }] :: [Register])
       it "Importing from empty file" $
@@ -33,7 +33,7 @@ spec = do
       it "Importing from large file" $
          getRecords "test/examples/few_records.txt" `shouldReturn` (
             [ Register {ticker = "GRND3", date = read "2019-07-23"::Day
-             , opType = COMPRA, quantity = 100, value = 7.73}
+             , opType = COMPRA, quantity = 200, value = 7.73}
             , Register {ticker = "ABEV3", date = read "2019-08-01"::Day
              , opType = COMPRA, quantity = 100, value = 20.4}
             , Register {ticker = "GRND3", date = read "2019-08-05"::Day
@@ -112,7 +112,7 @@ spec = do
       it "Filtering by using 'all' as reserved word" $
          fBt "all" rec `shouldReturn` (
             [ Register {ticker = "GRND3", date = read "2019-07-23"::Day
-             , opType = COMPRA, quantity = 100, value = 7.73}
+             , opType = COMPRA, quantity = 200, value = 7.73}
             , Register {ticker = "ABEV3", date = read "2019-08-01"::Day
              , opType = COMPRA, quantity = 100, value = 20.4}
             , Register {ticker = "GRND3", date = read "2019-08-05"::Day
@@ -171,7 +171,7 @@ spec = do
       it "Filtering by date by omitting the date field" $
          fBd "" rec `shouldReturn` (
             [ Register {ticker = "GRND3", date = read "2019-07-23"::Day
-             , opType = COMPRA, quantity = 100, value = 7.73}
+             , opType = COMPRA, quantity = 200, value = 7.73}
             , Register {ticker = "ABEV3", date = read "2019-08-01"::Day
              , opType = COMPRA, quantity = 100, value = 20.4}
             , Register {ticker = "GRND3", date = read "2019-08-05"::Day
@@ -227,7 +227,7 @@ spec = do
       it "Filtering by COMPRA" $ 
          fBo "COMPRA" rec `shouldReturn` (
             [ Register {ticker = "GRND3", date = read "2019-07-23"::Day
-             , opType = COMPRA, quantity = 100, value = 7.73}
+             , opType = COMPRA, quantity = 200, value = 7.73}
             , Register {ticker = "ABEV3", date = read "2019-08-01"::Day
              , opType = COMPRA, quantity = 100, value = 20.4}
             , Register {ticker = "GRND3", date = read "2019-08-05"::Day
@@ -272,7 +272,7 @@ spec = do
       it "Filtering by omitting the operation field" $
          fBo "" rec `shouldReturn` (
             [ Register {ticker = "GRND3", date = read "2019-07-23"::Day
-             , opType = COMPRA, quantity = 100, value = 7.73}
+             , opType = COMPRA, quantity = 200, value = 7.73}
             , Register {ticker = "ABEV3", date = read "2019-08-01"::Day
              , opType = COMPRA, quantity = 100, value = 20.4}
             , Register {ticker = "GRND3", date = read "2019-08-05"::Day
@@ -327,13 +327,16 @@ spec = do
          (fAvg $ (fBt "WEGE3" . fBd "2019-01-01 2019-12-31" . fBo "COMPRA")
           rec) `shouldReturn` ((28.29,400) :: (Double, Int))
 
+      it "Cost average by filtering a daytrade, same cost" $
+         (fAvg $ fBt "EGIE3" rec) `shouldReturn` ((0.0,0) :: (Double, Int))
+      
       it "Total wallet!" $
-         fTotal rec `shouldReturn` ((36286.0,1500) :: (Double, Int))
+         fTotal rec `shouldReturn` ((37059.0,1600) :: (Double, Int))
 
    describe "Dealing with Registers to save" $ do
       it "Registers becoming Strings (ready to save)" $
          r2L rec `shouldReturn` (
-            ["2019-07-23 COMPRA GRND3 100 7.73"
+            ["2019-07-23 COMPRA GRND3 200 7.73"
             ,"2019-08-01 COMPRA ABEV3 100 20.4"
             ,"2019-08-05 COMPRA GRND3 100 7.46"
             ,"2019-09-02 COMPRA EGIE3 100 44.79"
