@@ -10,6 +10,12 @@ import LibAssets ( getRecords
                  , fTotal
                  , fAvg
                  , r2L
+                 , saveRegs2File
+                 , hasValidTicker
+                 , hasValidCost
+                 , hasValidQuantity
+                 , hasValidDate
+                 , hasValidOpType
                  ) 
 
 rec = getRecords "test/examples/few_records.txt"
@@ -354,6 +360,155 @@ spec = do
             ,"2020-02-10 VENDA GRND3 100 35.45"
             ,"2020-02-28 VENDA EGIE3 100 31.9"
             ] :: [String])
+   
+   describe "Dealing with wrong fields and entries" $ do                        
+       it "Validating a entire wrong file" $                                     
+          getRecords "test/examples/entirely_wrong_fields.txt"                   
+            `shouldReturn` ([] :: [Register])
+            
+       it "Validating valid ticker (ABEV3)" $                                     
+          hasValidTicker "ABEV3"                   
+            `shouldBe` (True)
+
+       it "Validating wrong ticker (testtttt\'\'\")" $                                     
+          hasValidTicker "testtttt''\""                   
+            `shouldBe` (False)
+
+       it "Validating wrong ticker (^`*!@#_&<)" $                                     
+          hasValidTicker "^`*!@#_&<"                   
+            `shouldBe` (False)
+
+       it "Validating wrong ticker (\"\")" $                                     
+          hasValidTicker ""                   
+            `shouldBe` (False)
+
+       it "Validating wrong ticker (\"        \")" $                                     
+          hasValidTicker "        "                   
+            `shouldBe` (False)
+
+       it "Validating valid date (2020-10-01)" $                                     
+          hasValidDate "2020-10-01"                   
+            `shouldBe` (True)
+
+       it "Validating wrong date (2020-0101)" $                                     
+          hasValidDate "2020-0101"                   
+            `shouldBe` (False)
+
+       it "Validating wrong date (20200101)" $                                     
+          hasValidDate "20200101"                   
+            `shouldBe` (False)
+
+       it "Validating wrong date (01-01-2020)" $                                     
+          hasValidDate "01-01-2020"                   
+            `shouldBe` (False)
+
+       it "Validating wrong date (202001o1)" $                                     
+          hasValidDate "202001o1"                   
+            `shouldBe` (False)
+
+       it "Validating wrong date (2020'01'01)" $                                     
+          hasValidDate "2020'01'01"                   
+            `shouldBe` (False)
+
+       it "Validating wrong date (\"\")" $                                     
+          hasValidDate ""                   
+            `shouldBe` (False)
+
+       it "Validating wrong date (01/01/2020)" $                                     
+          hasValidDate "01/01/2020"                   
+            `shouldBe` (False)
+
+       it "Validating wrong date (2300-01-01)" $                                     
+          hasValidDate "2300-01-01"                   
+            `shouldBe` (False)
+
+       it "Validating wrong date (2020-13-01)" $                                     
+          hasValidDate "2020-13-01"                   
+            `shouldBe` (False)
+
+       it "Validating valid operation (COMPRA)" $                                     
+          hasValidOpType "COMPRA"                   
+            `shouldBe` (True)
+
+       it "Validating valid operation (VENDA)" $                                     
+          hasValidOpType "VENDA"                   
+            `shouldBe` (True)
+
+       it "Validating wrong operation (VEND)" $                                     
+          hasValidOpType "VEND"                   
+            `shouldBe` (False)
+
+       it "Validating wrong operation (COMPR)" $                                     
+          hasValidOpType "COMPR"                  
+            `shouldBe` (False)
+
+       it "Validating wrong operation (\"\")" $                                     
+          hasValidOpType ""                  
+            `shouldBe` (False)
+
+       it "Validating wrong operation (\" \")" $                                     
+          hasValidOpType " "                  
+            `shouldBe` (False)
+
+       it "Validating valid quantity (100)" $                                     
+          hasValidQuantity "100"                  
+            `shouldBe` (True)
+
+       it "Validating wrong quantity (-100)" $                                     
+          hasValidQuantity "-100"                  
+            `shouldBe` (False)
+
+       it "Validating wrong quantity (100e1800)" $                                     
+          hasValidQuantity "100e1800"                  
+            `shouldBe` (False)
+
+       it "Validating wrong quantity (\"\")" $                                     
+          hasValidQuantity ""                  
+            `shouldBe` (False)
+
+       it "Validating valid cost (10.50)" $                                     
+          hasValidCost "10.50"                  
+            `shouldBe` (True)
+
+       it "Validating valid cost (10.00)" $                                     
+          hasValidCost "10.00"                  
+            `shouldBe` (True)
+
+       it "Validating valid cost (10)" $                                     
+          hasValidCost "10"                  
+            `shouldBe` (True)
+
+       it "Validating wrong cost (\"\")" $                                     
+          hasValidCost ""                  
+            `shouldBe` (False)
+
+       it "Validating wrong cost (10,00)" $                                     
+          hasValidCost "10,00"                  
+            `shouldBe` (False)
+
+       it "Validating wrong cost (10'00)" $                                     
+          hasValidCost "10'00"                  
+            `shouldBe` (False)
+
+       it "Validating wrong cost (-1)" $                                     
+          hasValidCost "-1"                  
+            `shouldBe` (False)
+
+       it "Validating wrong cost (1o.00)" $                                     
+          hasValidCost "1o.00"                  
+            `shouldBe` (False)
+
+       it "Validating wrong cost (,10)" $                                     
+          hasValidCost ",10"                  
+            `shouldBe` (False)
+
+       it "Validating wrong cost (10,)" $                                     
+          hasValidCost "10,"                  
+            `shouldBe` (False)
+
+       it "Validating wrong cost (10^10)" $                                     
+          hasValidCost "10^10"                  
+            `shouldBe` (False)
 
 main :: IO ()
 main = hspec $ spec

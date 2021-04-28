@@ -15,6 +15,11 @@ import LibAssets
    , fAvg
    , r2L
    , s2L
+   , hasValidTicker
+   , hasValidCost
+   , hasValidQuantity
+   , hasValidDate
+   , hasValidOpType
    , saveRegs2File
    , someFunc
    )
