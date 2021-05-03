@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 3db64a15d3df10bddc0152dc458602832c911a16f286dc7bf137c34000ed73be
+-- hash: 1f90a29b655334d4ec379d53f687ca885bc3a47de077b82313a9166548b244e6
 
 name:           Assets
 version:        0.1.0.0
@@ -27,6 +27,7 @@ source-repository head
 
 library
   exposed-modules:
+      CommandLine
       DataTypes
       Filters
       LibAssets
@@ -37,6 +38,7 @@ library
       src
   build-depends:
       base >=4.7 && <5
+    , directory
     , split
     , time
   default-language: Haskell2010
@@ -51,6 +53,7 @@ executable Assets-exe
   build-depends:
       Assets
     , base >=4.7 && <5
+    , directory
     , split
     , time
   default-language: Haskell2010
@@ -66,6 +69,7 @@ test-suite Assets-test
   build-depends:
       Assets
     , base >=4.7 && <5
+    , directory
     , hspec
     , split
     , time

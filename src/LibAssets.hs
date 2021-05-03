@@ -13,7 +13,8 @@ module LibAssets
     , hasValidQuantity
     , hasValidDate
     , hasValidOpType
-    , someFunc
+    , filteredFilesInCurdir
+    , fromFiles2String
     ) where
 
 import Filters ( avg
@@ -31,6 +32,10 @@ import Reports ( reg2Lists
                , summ2Lists
                )
 import System.IO ()
+import System.Directory
+   ( getCurrentDirectory
+   , getDirectoryContents
+   )
 import Data.Time ( Day )
 import Data.List.Split ( splitOn )
 import Data.Char ( digitToInt
@@ -108,6 +113,16 @@ hasValidOpType str | str `elem` oPs = True
                    | otherwise      = False
                       where oPs = ["COMPRA", "VENDA"]
 
+-- thanks to https://stackoverflow.com/questions/6649347/
+-- how-to-list-all-files-in-current-directory
+filteredFilesInCurdir :: (FilePath -> Bool) -> IO [FilePath]
+filteredFilesInCurdir f = getCurrentDirectory >>= getDirectoryContents
+                           >>= return . filter f
+
+fromFiles2String :: IO [FilePath] -> IO [String]
+fromFiles2String paths = fmap (\p -> p) paths
+   --where filteredFilesInCurdir (\str -> isSuffixOf suffix str)
+
 s2L :: Functor f => f Summary -> f [String]
 s2L = fmap summ2Lists
 
@@ -131,6 +146,3 @@ fTotal = fmap total
 
 fAvg :: Functor f => f [Register] -> f (Double, Int)
 fAvg = fmap avg
-
-someFunc :: IO ()
-someFunc = putStrLn "someFunc"

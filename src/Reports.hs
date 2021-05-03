@@ -1,6 +1,7 @@
 module Reports
    ( reg2Lists
    , summ2Lists
+   , fSummarize
    ) where
 
 import DataTypes (Register (..), OpType (..), Ticker, Summary)
