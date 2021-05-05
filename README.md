@@ -1,6 +1,6 @@
 # Assets
 
-Assets is a simple application which goal is controlling and analyses of investiments in assets.
+Assets is a simple application which goal is controll and analyses of investiments in assets.
 
 **You can transform these raw records below...**
 
@@ -49,7 +49,7 @@ Then you will see the first screen
 digite uma opção > 
 ```
 
-The first need is to import the raw data from your file system, so you will press **1** to do this.
+You first need to import the raw data from your file system, so press **1** to do this.
 
 ```console
 1 - Importar
@@ -57,13 +57,13 @@ The first need is to import the raw data from your file system, so you will pres
 digite uma opção >
 ```
 
-**Note**: raw data must be formatted in five fields separated by blanks. Each individual field must follow these rules below:
+**Note**: raw data must be formatted in five fields separated by blank spaces. Each individual field must follow these rules below:
 
 ```console
 2019-11-01 COMPRA WEGE3 200 26.22
 ```
 
- When you press **1 ** again at the last prompt, you will be asked to import the file. So just type in the full file path! For example, there is an appropriate file that you can get ...
+ When you press **1** again at the last prompt, you will be asked to import the file. So just type in the full file path! For example, there is an appropriate file that you can get ...
 
 ```console
 test/examples/few_records.txt
@@ -104,7 +104,7 @@ So, the next display will be
 0 - Voltar
 digite uma opção >
 ```
-And your choice **1** to select the file
+And you should choose **1** to select the file
 
 You can now choose between three types of filtering:
 
@@ -112,7 +112,8 @@ You can now choose between three types of filtering:
 + by date (or a range of dates separated by a space)
 + by type of operation (COMPRA or VENDA)
 
-Say you want only tickers filtered by WEGE3 and ABEV3, you can first
+Let's say that you only want tickers filtered by WEGE3 and ABEV3, you can first do as
+following
 
 ```console
 1 - Filtrar por ticker(s). Ex.: ABCD3, ABCD3 EFGH4 KLMN11
@@ -183,7 +184,7 @@ and the contents of the file
 2020-02-03 COMPRA WEGE3 100 40.64
 ```
 
-At the end, you can return to the screens shown before, just by typing **0**.
+At the end, you can return to the screens shown before, by just typing **0**.
 
 By typing 3, you can make a summary report on each filtered data set
 
@@ -210,7 +211,7 @@ digite uma opção > 1
 digite uma opção > 1
 ```
 
-and than
+and then
 
 ```console
 o arquivo summary-2021-05-04.181816.txt foi salvo
@@ -231,4 +232,4 @@ ABEV3 400 6955.0 17.38
 
 ```
 
-**That's it! For a while...**
+**That's it! For now...**
