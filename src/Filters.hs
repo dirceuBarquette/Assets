@@ -15,7 +15,7 @@ filterByOpType op regs = filter (\reg -> opType reg == (read op::OpType)) regs
 
 filterBetweenDates :: String -> [Register] -> [Register]
 filterBetweenDates "" regs  = regs
-filterBetweenDates dts regs = filter (\reg -> elem (date reg) range) regs
+filterBetweenDates dts regs = filter (\reg -> date reg `elem` range) regs
                                 where
                                  wdts = words dts
                                  [dI, dF] = if length wdts == 2 then
@@ -35,9 +35,9 @@ cv op (pm,q) (v,qop) = (pmf, qf)
                else subtract qop q
          pmf = 
             case op of
-               COMPRA -> (sum [pm * (fromIntegral q), v * (fromIntegral qop)])
+               COMPRA -> sum [pm * fromIntegral q, v * fromIntegral qop]
                            / fromIntegral qf
-               VENDA  -> if not (qf == 0) then pm else 0
+               VENDA  -> if qf /= 0 then pm else 0
          
 avg :: [Register] -> (Double, Int)
 avg = foldl (\ (pm,q) reg-> 
@@ -48,7 +48,7 @@ total :: [Register] -> (Double, Int)
 total = foldl (\(v,q) reg -> 
                 let amount = fromIntegral (quantity reg) * value reg
                 in if opType reg == COMPRA then
-                     (v + amount, q + (quantity reg))
+                     (v + amount, q + quantity reg)
                    else
-                     (v - amount, q - (quantity reg)))
+                     (v - amount, q - quantity reg))
               (0,0)

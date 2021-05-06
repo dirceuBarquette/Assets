@@ -34,7 +34,7 @@ spec = do
       it "Importing from empty file" $
          getRecords "test/examples/empty.txt" `shouldReturn` ([] :: [Register])
       it "Importing from non existing file" $
-         getRecords "test/examples/empty" `shouldThrow` anyIOException
+         getRecords "test/examples/empty" `shouldReturn` ([] :: [Register])
       it "Importing from large file" $
          getRecords "test/examples/few_records.txt" `shouldReturn` (
             [ Register {ticker = "GRND3", date = read "2019-07-23"::Day

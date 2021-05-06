@@ -22,7 +22,6 @@ import LibAssets
    , hasValidOpType
    , saveRegs2File
    , filteredFilesInCurdir
-   , fromFiles2String
    )
 import Filters
    ( avg
@@ -54,6 +53,11 @@ import Data.Time
    , defaultTimeLocale
    , ZonedTime
    )
+import System.Console.ANSI 
+   ( SGR(..)
+   , ConsoleIntensity(..)
+   , setSGR
+   )
 
 loadMain :: Int -> IO ()
 loadMain option = do
@@ -70,7 +74,7 @@ loadMain option = do
                   1 -> loadImport 1
                   2 -> loadFilter 2
                   3 -> loadSummarize 2
-                  otherwise -> loadMain 9
+                  _ -> loadMain 9
          else
             do newline
                putStrLn "Opção inválida"
@@ -88,7 +92,7 @@ loadSummarize option = do
             do newline
                case option of
                   1 -> loadSummarize2 2
-                  otherwise -> loadMain 9
+                  _ -> loadMain 9
          else
             do newline
                putStrLn "Opção inválida"
@@ -96,7 +100,7 @@ loadSummarize option = do
 
 loadSummarize2 :: Int -> IO () -- mov 2 lista arquivos para selecionar
 loadSummarize2 option = do
-   fileList <- filteredFilesInCurdir (\f -> isSuffixOf ".flt" f)
+   fileList <- filteredFilesInCurdir (isSuffixOf ".flt")
    putStr $ unlines $ zipWith (\n f -> show n ++ " - " ++ f) [1..] fileList
    showScreen 26
    if option == 0 then
@@ -108,9 +112,9 @@ loadSummarize2 option = do
             do newline
                case option of
                   0 -> loadSummarize 9
-                  otherwise -> if null fileList then 
-                                 loadSummarize 9
-                               else runSummarize (fileList !! (option-1))
+                  _ -> if null fileList then 
+                          loadSummarize 9
+                       else runSummarize (fileList !! (option-1))
          else
             do newline
                putStrLn "Opção inválida"
@@ -130,63 +134,64 @@ runSummarize path = do
 loadFilter :: Int -> IO () -- mov 1 opção selecionar arquivo
 loadFilter option = do
    showScreen 2
-   if option == 0 then
+   --if option == 0 then
+   --   do newline
+   --else
+   --   do 
+   option <- getOption
+   if option >= 0 then
       do newline
+         case option of
+            1 -> loadFilter2 2
+            _ -> loadMain 9
    else
-      do 
-         option <- getOption
-         if option >= 0 then
-            do newline
-               case option of
-                  1 -> loadFilter2 2
-                  otherwise -> loadMain 9
-         else
-            do newline
-               putStrLn "Opção inválida"
-               loadMain 9
+      do newline
+         putStrLn "Opção inválida"
+         loadMain 9
 
 loadFilter2 :: Int -> IO () -- mov 2 lista arquivos para selecionar
 loadFilter2 option = do
-   fileList <- filteredFilesInCurdir (\f -> isSuffixOf ".flt" f)
+   fileList <- filteredFilesInCurdir (isSuffixOf ".flt")
    putStr $ unlines $ zipWith (\n f -> show n ++ " - " ++ f) [1..] fileList
    showScreen 21
-   if option == 0 then
+   --if option == 0 then
+   --   do newline
+   --else
+   --   do 
+   option <- getOption
+   if option >= 0 then
       do newline
+         case option of
+            0 -> loadFilter 9
+            9 -> loadFilter 9
+            _ -> if null fileList then 
+                    loadFilter 9
+                 else file2filterLoaded 9 (fileList !! (option-1))
    else
-      do 
-         option <- getOption
-         if option >= 0 then
-            do newline
-               case option of
-                  0 -> loadFilter 9
-                  otherwise -> if null fileList then 
-                                 loadFilter 9
-                               else file2filterLoaded 9 (fileList !! (option-1))
-         else
-            do newline
-               putStrLn "Opção inválida"
-               loadFilter2 9
+      do newline
+         putStrLn "Opção inválida"
+         loadFilter2 9
 
 file2filterLoaded :: Int -> String -> IO () -- mov 3 arquivo selecionado
 file2filterLoaded option file = do          -- lista as opções de filtragem
    putStrLn $ "Arquivo carregado: " ++ file
    showScreen 22
-   if option == 0 then
+   --if option == 0 then
+   --   do newline
+   --else
+   --   do 
+   option <- getOption
+   if option >= 0 then
       do newline
+         case option of
+            1 -> loadFilterByTicker 2 file
+            2 -> loadFilterByDate 2 file
+            3 -> loadFilterByOper 2 file
+            _ -> loadFilter2 9
    else
-      do 
-         option <- getOption
-         if option >= 0 then
-            do newline
-               case option of
-                  1 -> loadFilterByTicker 2 file
-                  2 -> loadFilterByDate 2 file
-                  3 -> loadFilterByOper 2 file
-                  otherwise -> loadFilter2 9
-         else
-            do newline
-               putStrLn "Opção inválida"
-               loadMain 9
+      do newline
+         putStrLn "Opção inválida"
+         loadMain 9
 
 loadFilterByOper :: Int -> String -> IO () -- mov 4 
 loadFilterByOper option file = do
@@ -260,36 +265,40 @@ runFilterByTicker tickers path = do
 loadImport :: Int -> IO ()
 loadImport option = do
    showScreen 1
-   if option == 0 then
+   --if option == 0 then
+   --   do newline
+   --else
+   --   do 
+   option <- getOption
+   if option >= 0 then
       do newline
+         case option of
+            1 -> runImport
+            _ -> loadMain 9
    else
-      do 
-         option <- getOption
-         if option >= 0 then
-            do newline
-               case option of
-                  1 -> runImport
-                  otherwise -> loadMain 9
-         else
-            do newline
-               putStrLn "Opção inválida"
-               loadMain 9
+      do newline
+         putStrLn "Opção inválida"
+         loadMain 9
 
 runImport :: IO ()
 runImport = do 
    showScreen 11
    fileName <- fixLn
    let rec = getRecords fileName
-   let r2l = r2L rec
-   now <- getZonedTime
-   let imported = makePath ("imported-",".flt") now
-   saveRegs2File imported r2l
-   putStrLn $ "o arquivo " ++ imported ++ " está disponível para filtragem"
+   isEmpty <- null <$> rec
+   if isEmpty then do
+      putStrLn $ "Não foi possível ler registros de " ++ fileName
+   else do 
+      let r2l = r2L rec
+      now <- getZonedTime
+      let imported = makePath ("imported-",".flt") now
+      saveRegs2File imported r2l
+      putStrLn $ "o arquivo " ++ imported ++ " está disponível para filtragem"
    loadMain 9
 
 makePath :: (String,String) -> ZonedTime -> String
-makePath (prefix,suffix) zT = 
-   formatTime defaultTimeLocale format $ zT
+makePath (prefix,suffix) = 
+   formatTime defaultTimeLocale format
       where format = prefix ++ "%Y-%m-%d.%H%M%S" ++ suffix
 
 newline :: IO ()
@@ -299,7 +308,7 @@ fixLn :: IO String
 fixLn = do
    ln <- getLine
    if fSpaces ln then fixLn else return ln
-      where fSpaces str = and $ map isSpace str
+      where fSpaces str = all isSpace str
 
 getNonEmptyChar :: IO Char
 getNonEmptyChar = do

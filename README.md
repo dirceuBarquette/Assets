@@ -1,6 +1,6 @@
 # Assets
 
-Assets is a simple application which goal is controll and analyses of investiments in assets.
+Assets is a simple application which goal is control and analyses of investiments in assets.
 
 **You can transform these raw records below...**
 

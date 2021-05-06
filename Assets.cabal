@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 1f90a29b655334d4ec379d53f687ca885bc3a47de077b82313a9166548b244e6
+-- hash: d8321705cf314de15ac598ad1f931b3b77b238d76cb5861a70c18fc02abe7eed
 
 name:           Assets
 version:        0.1.0.0
@@ -37,7 +37,8 @@ library
   hs-source-dirs:
       src
   build-depends:
-      base >=4.7 && <5
+      ansi-terminal
+    , base >=4.7 && <5
     , directory
     , split
     , time
@@ -52,6 +53,7 @@ executable Assets-exe
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       Assets
+    , ansi-terminal
     , base >=4.7 && <5
     , directory
     , split
@@ -68,6 +70,7 @@ test-suite Assets-test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       Assets
+    , ansi-terminal
     , base >=4.7 && <5
     , directory
     , hspec

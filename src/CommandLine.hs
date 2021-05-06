@@ -2,15 +2,48 @@ module CommandLine
    ( showScreen
    ) where
 
+import System.Console.ANSI 
+   ( SGR
+      ( Reset
+      , SetColor  
+      , SetConsoleIntensity
+      )
+   , ConsoleIntensity( BoldIntensity )
+   , setSGR
+   , ConsoleLayer
+      ( Foreground
+      )
+   , Color
+      ( White
+      , Green
+      )
+   , ColorIntensity
+      ( Vivid
+      , Dull
+      )
+   )
+
 type Menu     = [String]
 type Prompt   = String
 type Screen   = (Int, (Menu, Prompt))
 
 showScreen :: Int -> IO ()
-showScreen i = putStr $ theMenu ++ thePrompt 
-   where (Just (menu, prompt)) = lookup i screens
-         theMenu   = unlines menu
-         thePrompt = prompt
+showScreen i = do
+   setSGR [ SetConsoleIntensity BoldIntensity
+          , SetColor Foreground Dull White
+          ]
+   putStr theMenu
+   putStr thePrompt 
+   setSGR [Reset]
+   setSGR [ 
+            SetColor Foreground Vivid Green
+          , SetConsoleIntensity BoldIntensity
+          ]
+   putStr " > "
+   setSGR [Reset]
+      where (Just (menu, prompt)) = lookup i screens
+            theMenu   = unlines menu
+            thePrompt = prompt
 
 screens :: [Screen]
 screens = [ exitScreen 
@@ -110,7 +143,7 @@ mainMenu = ["1 - Importar", "2 - Filtrar", "3 - Sumarizar","0 - Sair"]
 
 -- begin prompts
 defaultPrompt :: String
-defaultPrompt = "digite uma opção > "
+defaultPrompt = "digite uma opção"
 
 exitPrompt :: Prompt
 exitPrompt = "Até a próxima!"
@@ -132,15 +165,15 @@ file2BeFilteredPrompt = defaultPrompt
 
 filterByTickerPrompt :: Prompt
 filterByTickerPrompt =
-   "Filtrar por ticker(s). Ex.: ABCD3, ABCD3 EFGH4 KLMN11 > "
+   "Filtrar por ticker(s). Ex.: ABCD3, ABCD3 EFGH4 KLMN11"
 
 filterByDatePrompt :: Prompt
 filterByDatePrompt =
-   "Filtrar por data(s). Ex.: 2019-01-01 2019-12-31, 2020-04-01 > "
+   "Filtrar por data(s). Ex.: 2019-01-01 2019-12-31, 2020-04-01"
 
 filterByOperPrompt :: Prompt
 filterByOperPrompt =
-   "Filtrar por tipo de ordem. Ex.: COMPRA, VENDA > "
+   "Filtrar por tipo de ordem. Ex.: COMPRA, VENDA"
 
 mainPrompt :: Prompt
 mainPrompt = defaultPrompt
@@ -149,5 +182,5 @@ importPrompt :: Prompt
 importPrompt = defaultPrompt
 
 importPrompt2 :: Prompt
-importPrompt2 = "nome do arquivo para importar > "
+importPrompt2 = "nome do arquivo para importar"
 -- end prompts

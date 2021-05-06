@@ -24,6 +24,7 @@ dependencies:
 - time
 - split
 - directory
+- ansi-terminal
 
 library:
   source-dirs: src
