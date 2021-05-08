@@ -6,8 +6,14 @@ module Filters
    , filterByOpType
    ) where
 
-import DataTypes (Register (..), OpType (..), Ticker, Summary)
-import Data.Time (Day)
+import DataTypes
+   ( Register(..)
+   , OpType(..)
+   , Ticker
+   , Summary
+   )
+import Data.Time
+   ( Day )
 
 filterByOpType :: String -> [Register] -> [Register]
 filterByOpType "" regs = regs
