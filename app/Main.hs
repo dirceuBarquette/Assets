@@ -114,7 +114,7 @@ loadSummarize2 option = do
             do newline
                case option of
                   0 -> loadSummarize 9
-                  _ -> if null fileList then 
+                  _ -> if null fileList || option > length fileList then 
                           loadSummarize 9
                        else runSummarize (fileList !! (option-1))
          else
@@ -158,7 +158,7 @@ loadFilter2 = do
          case option of
             0 -> loadFilter
             9 -> loadFilter
-            _ -> if null fileList then 
+            _ -> if null fileList || option > length fileList then 
                     loadFilter
                  else file2filterLoaded (fileList !! (option-1))
    else
