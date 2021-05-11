@@ -1,3 +1,11 @@
+{-|                                                                                
+Module      : Reports
+Description : data structures
+Copyright   : 2021 Dirceu Barquette
+License     : BSD3
+Maintainer  : dirceu.barquette@gmail.com
+
+-}
 module Reports
    ( reg2Lists
    , summ2Lists

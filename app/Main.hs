@@ -1,3 +1,11 @@
+{-|                                                                                
+Module      : Main
+Description : User Interface functions
+Copyright   : 2021 Dirceu Barquette
+License     : BSD3
+Maintainer  : dirceu.barquette@gmail.com
+
+-}
 module Main where
 
 import DataTypes

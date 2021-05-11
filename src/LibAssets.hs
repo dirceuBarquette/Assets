@@ -1,3 +1,11 @@
+{-|                                                                                
+Module      : LibAssets
+Description : data structures
+Copyright   : 2021 Dirceu Barquette
+License     : BSD3
+Maintainer  : dirceu.barquette@gmail.com
+
+-}
 module LibAssets
    ( getRecords
    , fBt

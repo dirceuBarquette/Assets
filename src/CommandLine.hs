@@ -1,3 +1,12 @@
+{-|                                                                                
+Module      : CommandLine
+Description : Displays
+Copyright   : 2021 Dirceu Barquette
+License     : BSD3
+Maintainer  : dirceu.barquette@gmail.com
+
+Provides the menu items displayed while the user interacts with application on the command line
+-}
 module CommandLine
    ( showScreen
    ) where
@@ -27,6 +36,8 @@ type Menu     = [String]
 type Prompt   = String
 type Screen   = (Int, (Menu, Prompt))
 
+-- | This function aggregates and shows the menu items available
+-- to interacts with the user
 showScreen :: Int -> IO ()
 showScreen i = do
    setSGR [ SetConsoleIntensity BoldIntensity
