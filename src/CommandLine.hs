@@ -1,6 +1,6 @@
 {-|                                                                                
 Module      : CommandLine
-Description : Displays
+Description : This module is basically a displays library
 Copyright   : 2021 Dirceu Barquette
 License     : BSD3
 Maintainer  : dirceu.barquette@gmail.com

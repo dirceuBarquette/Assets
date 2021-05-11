@@ -1,6 +1,6 @@
 {-|                                                                                
 Module      : LibAssets
-Description : data structures
+Description : The basic API for getting entries and filtering them
 Copyright   : 2021 Dirceu Barquette
 License     : BSD3
 Maintainer  : dirceu.barquette@gmail.com
@@ -73,6 +73,7 @@ validating = filter (\y -> combo (y !! 1) (head y)
            && hasValidCost cs
            && hasValidTicker tk
 
+-- | Gets entries from a valid format file 
 getRecords :: FilePath -> IO [Register]
 getRecords path = do
    contents <- getRecordFrom path
@@ -90,18 +91,22 @@ getRecords path = do
                                         (read (x !! 4) :: Double)) validEntries
          return regs
 
+-- | This function parses a 'ticker' field of the 'Register' type
 hasValidTicker :: String -> Bool
 hasValidTicker str = (length str < 10) && isalpha str && notNull str
    where isalpha s = all isAlphaNum str
          notNull s = not $ null str
 
+-- | This function parses a 'value' field of the 'Register' type
 hasValidCost :: String -> Bool
 hasValidCost str = all isDigit (concat $ splitOn "." str)
                      && not (null str)
 
+-- | This function parses a 'quantity' field of the 'Register' type
 hasValidQuantity :: String -> Bool
 hasValidQuantity str = all isDigit str && not (null str)
 
+-- | This function parses a 'date' field of the 'Register' type
 hasValidDate :: String -> Bool
 hasValidDate str = and [ has10chars str
                        , has3fields str
@@ -130,35 +135,46 @@ hasValidDate str = and [ has10chars str
                                     , toDay   < 32
                                     ])
 
+-- | This function parses a 'opType' field of the 'Register' type
 hasValidOpType :: String -> Bool
 hasValidOpType str | str `elem` oPs = True
                    | otherwise      = False
                       where oPs = ["COMPRA", "VENDA"]
 
+-- | This function gets a directory content. It fetches by \".txt\" or
+-- \".flt\" file types
 filteredFilesInCurdir :: (FilePath -> Bool) -> IO [FilePath]
 filteredFilesInCurdir f = filter f <$> 
                            (getCurrentDirectory >>= getDirectoryContents)
 
+-- | This function converts from a 'Summary' type to be saved
 s2L :: Functor f => f Summary -> f [String]
 s2L = fmap summ2Lists
 
+-- | This function converts from a 'Register' type to be saved
 r2L :: Functor f => f [Register] -> f [String]
 r2L = fmap reg2Lists
 
+-- | This function saves a file of filtered entries
 saveRegs2File :: FilePath -> IO [String] -> IO ()
 saveRegs2File path r2l = r2l >>= writeFile path . unlines
 
+-- | This function operates as the main 'opType' filtering command
 fBo :: Functor f => String -> f [Register] -> f [Register]
 fBo op = fmap (filterByOpType op)
 
+-- | This function operates as the main 'date' filtering command
 fBd :: Functor f => String -> f [Register] -> f [Register]
 fBd dts = fmap (filterBetweenDates dts)
 
+-- | This function operates as the main 'ticker' filtering command
 fBt :: Functor f => String -> f [Register] -> f [Register]
 fBt tk = fmap (filterByTicker tk)
 
+-- | This function sums the total cost of a 'Register' list
 fTotal :: Functor f => f [Register] -> f (Double, Int)
 fTotal = fmap total
 
+-- | This function gets the average cost of a 'Register' list
 fAvg :: Functor f => f [Register] -> f (Double, Int)
 fAvg = fmap avg

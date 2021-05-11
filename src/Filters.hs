@@ -1,6 +1,6 @@
 {-|                                                                                
 Module      : Filters
-Description : data structures
+Description : This module provides filtering functions
 Copyright   : 2021 Dirceu Barquette
 License     : BSD3
 Maintainer  : dirceu.barquette@gmail.com
