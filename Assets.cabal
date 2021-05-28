@@ -1,13 +1,13 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.33.0.
+-- This file has been generated from package.yaml by hpack version 0.34.4.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: d8321705cf314de15ac598ad1f931b3b77b238d76cb5861a70c18fc02abe7eed
+-- hash: 7d251d36bbbfc7f970bd8aacb5889ff8848e61d2bb01501d282bae3398bb3446
 
 name:           Assets
-version:        0.1.0.0
+version:        0.2.0.0
 description:    Please see the README on GitHub at <https://github.com/dirceuBarquette/Assets#readme>
 homepage:       https://github.com/dirceuBarquette/Assets#readme
 bug-reports:    https://github.com/dirceuBarquette/Assets/issues
@@ -27,6 +27,8 @@ source-repository head
 
 library
   exposed-modules:
+      AGui
+      ATui
       CommandLine
       DataTypes
       Filters
@@ -40,6 +42,8 @@ library
       ansi-terminal
     , base >=4.7 && <5
     , directory
+    , glib
+    , gtk3
     , split
     , time
   default-language: Haskell2010
@@ -56,6 +60,8 @@ executable Assets-exe
     , ansi-terminal
     , base >=4.7 && <5
     , directory
+    , glib
+    , gtk3
     , split
     , time
   default-language: Haskell2010
@@ -73,6 +79,8 @@ test-suite Assets-test
     , ansi-terminal
     , base >=4.7 && <5
     , directory
+    , glib
+    , gtk3
     , hspec
     , split
     , time

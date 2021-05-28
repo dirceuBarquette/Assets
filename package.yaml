@@ -1,5 +1,5 @@
 name:                Assets
-version:             0.1.0.0
+version:             0.2.0.0
 github:              "dirceuBarquette/Assets"
 license:             BSD3
 author:              "Dirceu Barquette"
@@ -21,6 +21,8 @@ description:         Please see the README on GitHub at <https://github.com/dirc
 
 dependencies:
 - base >= 4.7 && < 5
+- gtk3
+- glib
 - time
 - split
 - directory
