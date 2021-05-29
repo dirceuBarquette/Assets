@@ -9,44 +9,23 @@ Maintainer  : dirceu.barquette@gmail.com
 module ATui where
 
 import DataTypes
-   ( OpType
-   , Register
-   , Ticker
-   , Summary
-   )
+   ( Register )
 import LibAssets
    ( getRecords
    , fBt
    , fBd
    , fBo
-   , fTotal
-   , fAvg
    , r2L
    , s2L
-   , hasValidTicker
-   , hasValidCost
-   , hasValidQuantity
    , hasValidDate
    , hasValidOpType
    , saveRegs2File
    , filteredFilesInCurdir
    )
-import Filters
-   ( avg
-   , total
-   , filterByTicker
-   , filterBetweenDates
-   , filterByOpType
-   )
 import Reports
-   ( reg2Lists
-   , summ2Lists
-   , fSummarize
-   )
+   ( fSummarize )
 import CommandLine
-   ( showScreen
-   )
-import System.IO                                                                   
+   ( showScreen )
 import Data.Char
    ( isDigit
    , isSpace
@@ -61,11 +40,6 @@ import Data.Time
    , formatTime
    , defaultTimeLocale
    , ZonedTime
-   )
-import System.Console.ANSI 
-   ( SGR(..)
-   , ConsoleIntensity(..)
-   , setSGR
    )
 
 loadMain :: Int -> IO ()

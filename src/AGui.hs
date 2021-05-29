@@ -9,17 +9,110 @@ module AGui
    ( mainWindow ) where
 
 import Control.Monad
-import System.IO (hFlush, stdout)
+   ( void
+   , forM_
+   )
+import System.IO
+   ( hFlush
+   , stdout
+   )
 import System.Directory
    ( getCurrentDirectory
    , renameFile
    , doesFileExist
    )
 import System.Glib.UTFString
-import Control.Concurrent (threadDelay)
+   ( GlibString )
+import Control.Concurrent
+   ( threadDelay )
 import Control.Monad.IO.Class
-import Data.IORef
+   ( liftIO )
 import Graphics.UI.Gtk
+   ( Window
+   , initGUI
+   , windowNew
+   , windowTitle
+   , windowDefaultHeight
+   , windowDefaultWidth
+   , widgetShowAll
+   , mainGUI
+   , mainQuit
+   , deleteEvent
+   , buttonActivated
+   , hSeparatorNew
+   , vSeparatorNew
+   , on
+   , set
+   , VBox
+   , vBoxNew
+   , hBoxNew
+   , widgetExpand
+   , widgetHExpand
+   , widgetVExpand
+   , hButtonBoxNew
+   , VButtonBox
+   , ButtonBoxStyle( ButtonboxStart ) 
+   , buttonBoxSetLayout
+   , vButtonBoxNew
+   , buttonNewWithLabel
+   , buttonGetLabel
+   , containerAdd
+   , containerBorderWidth
+   , containerRemove
+   , containerChild
+   , containerGetChildren
+   , textBufferNew
+   , TextBuffer
+   , textViewEditable
+   , textViewNewWithBuffer
+   , textBufferSetText
+   , scrolledWindowNew
+   , labelNew
+   , viewportNew
+   , adjustmentNew
+   , vSeparatorNew
+   , widgetOpacity
+   , entryNew
+   , Entry
+   , entryEditable
+   , entryNewWithBuffer
+   , entryBufferNew
+   , EntryBuffer
+   , entryBufferInsertText
+   , entryBufferDeleteText
+   , entryGetText
+   , entrySetText
+   , Button
+   , ButtonClass
+   , ButtonsType( ButtonsOk ) 
+   , widgetDestroy
+   , dialogRun
+   , dialogAddButton
+   , MessageType
+      ( MessageQuestion
+      , MessageError
+      , MessageInfo
+      ) 
+   , DialogFlags( DialogDestroyWithParent ) 
+   , DialogFlags( DialogModal )
+   , messageDialogNew
+   , fileChooserGetFilename
+   , fileChooserDialogNew
+   , FileChooserAction
+      ( FileChooserActionSave
+      , FileChooserActionOpen
+      )
+   , fileChooserSetFilename
+   , fileChooserSetCurrentFolder
+   , ResponseId
+      ( ResponseCancel
+      , ResponseDeleteEvent
+      , ResponseOk
+      , ResponseApply
+      )
+   , ButtonsType( ButtonsNone )
+   , AttrOp( (:=))
+   )
 import Graphics.UI.Gtk.Builder
 import Graphics.UI.Gtk.Abstract.Box
 import Data.Time
@@ -430,11 +523,9 @@ runRenameDialog (window,parent,viewBuffer,activeFile) fileInUse = do
                   renameFile filename path
                   ffList <- filteredFilesInCurdir (isSuffixOf ".flt")
                   let searched = [x |x <- ffList,isSuffixOf  x  path]
-                  --putStrLn $ show (length searched) ++ " " ++ path
-                  let ok = forM_ searched (\x -> putStrLn x)
-                  forM_ searched (\x -> do 
-                                    setActiveFile activeFile x
-                                    entrySetText fileInUse x)
+                  forM_ searched $ do 
+                                    setActiveFile activeFile
+                                    entrySetText fileInUse 
                   insertFileListButtonBox (parent,viewBuffer,activeFile)
                   widgetDestroy dialog
       return ()
