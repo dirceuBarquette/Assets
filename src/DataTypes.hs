@@ -33,5 +33,12 @@ data Register  = Register { ticker   :: Ticker
                           } deriving (Show, Eq)
 
 -- | A stock market transaction, 'OpType', can be represented at 
--- least BUY or SELL
-data OpType = COMPRA | VENDA deriving (Show, Read, Eq)
+-- least BUY, SELL. This dataset has been updated to cover all possible events
+data OpType = COMPRA
+            | VENDA 
+            | DIVID
+            | JSCP
+            | DESDOB
+            | GRUPAM
+            | AMORTI
+            | BONIF deriving (Show, Read, Eq)

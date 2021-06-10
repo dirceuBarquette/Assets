@@ -51,7 +51,7 @@ import Graphics.UI.Gtk
    , widgetVExpand
    , hButtonBoxNew
    , VButtonBox
-   , ButtonBoxStyle( ButtonboxStart ) 
+   , ButtonBoxStyle( ButtonboxStart )
    , buttonBoxSetLayout
    , vButtonBoxNew
    , buttonNewWithLabel
@@ -84,7 +84,7 @@ import Graphics.UI.Gtk
    , entrySetText
    , Button
    , ButtonClass
-   , ButtonsType( ButtonsOk ) 
+   , ButtonsType( ButtonsOk )
    , widgetDestroy
    , dialogRun
    , dialogAddButton
@@ -92,8 +92,8 @@ import Graphics.UI.Gtk
       ( MessageQuestion
       , MessageError
       , MessageInfo
-      ) 
-   , DialogFlags( DialogDestroyWithParent ) 
+      )
+   , DialogFlags( DialogDestroyWithParent )
    , DialogFlags( DialogModal )
    , messageDialogNew
    , fileChooserGetFilename
@@ -157,22 +157,22 @@ mainWindow :: IO ()
 mainWindow = do
    void initGUI
 
-   mainBox <- hBoxNew False 0
+   mainBox            <- hBoxNew False 0
    set mainBox [boxSpacing := 1, widgetExpand := True]
 
-   window <- windowNew
+   window             <- windowNew
    set window [ windowDefaultWidth := 800, windowDefaultHeight := 400
               , containerBorderWidth := 2, containerChild := mainBox
               , windowTitle := "Assets"
               ]
-   
-   importBox <- vBoxNew False 2
+
+   importBox          <- vBoxNew False 2
    set importBox [ widgetExpand := True]
-   sep1     <- vSeparatorNew
-   filterBox <- vBoxNew False 2
+   sep1               <- vSeparatorNew
+   filterBox          <- vBoxNew False 2
    set filterBox [ widgetOpacity := 0.9, widgetExpand := True ]
-   sep2     <- vSeparatorNew
-   viewBox   <- vBoxNew False 2
+   sep2               <- vSeparatorNew
+   viewBox            <- vBoxNew False 2
    set viewBox [ widgetExpand := True]
 
    boxPackStart mainBox importBox PackGrow 0
@@ -181,69 +181,69 @@ mainWindow = do
    boxPackStart mainBox sep2      PackNatural 0
    boxPackStart mainBox viewBox   PackGrow 0
 
-   importBtBtBox <- hButtonBoxNew
+   importBtBtBox      <- hButtonBoxNew
    set importBtBtBox [widgetExpand := False]
 
-   importBtn <- buttonNewWithLabel "Importar"
+   importBtn          <- buttonNewWithLabel "Importar"
    set importBtn []
    containerAdd importBtBtBox importBtn
 
-   sepImport     <- hSeparatorNew
+   sepImport          <- hSeparatorNew
 
-   filesScrolled <- scrolledWindowNew Nothing Nothing
+   filesScrolled      <- scrolledWindowNew Nothing Nothing
    set filesScrolled [widgetExpand := True]
 
-   adj <- adjustmentNew 0 0 0 0 0 0
-   filesViewport <- viewportNew adj adj
+   adj                <- adjustmentNew 0 0 0 0 0 0
+   filesViewport      <- viewportNew adj adj
    containerAdd filesScrolled filesViewport
 
-   filesBox <- vBoxNew True 0
+   filesBox           <- vBoxNew True 0
    set filesBox [ widgetHExpand := True
                 , widgetVExpand := True
                 ]
    containerAdd filesViewport filesBox
-   
+
    boxPackStart importBox importBtBtBox PackNatural 0
    boxPackStart importBox sepImport     PackNatural 0
    boxPackStart importBox filesScrolled PackGrow 0
 
-   filterBtBtBox <- hButtonBoxNew
+   filterBtBtBox      <- hButtonBoxNew
    set filterBtBtBox [widgetExpand := False]
 
-   filterBtn <- buttonNewWithLabel "Filtrar"
+   filterBtn          <- buttonNewWithLabel "Filtrar"
    set filterBtn []
    containerAdd filterBtBtBox filterBtn
- 
-   sepFilter     <- hSeparatorNew
 
-   filtersBox <- vBoxNew True 2
+   sepFilter          <- hSeparatorNew
+
+   filtersBox         <- vBoxNew True 2
    set filtersBox [ widgetHExpand := True
                   , widgetVExpand := True
                   ]
 
-   firstBoxFilterBox <- vBoxNew True 2
+   firstBoxFilterBox  <- vBoxNew True 2
    set firstBoxFilterBox [ widgetHExpand := True, widgetVExpand := True ]
 
    secondBoxFilterBox <- vBoxNew True 2
    set secondBoxFilterBox [ widgetHExpand := True, widgetVExpand := True ]
 
-   thirdBoxFilterBox <- vBoxNew True 2
+   thirdBoxFilterBox  <- vBoxNew True 2
    set thirdBoxFilterBox [ widgetHExpand := True, widgetVExpand := True ]
 
-   fbtLabel <- labelNew (Just "Filtro por Ticker")
-   tickerFilter <- entryNew
+   fbtLabel           <- labelNew (Just "Filtro por Ticker")
+   tickerFilter       <- entryNew
 
    boxPackStart firstBoxFilterBox fbtLabel PackNatural 0
    boxPackStart firstBoxFilterBox tickerFilter PackNatural 0
 
-   dbtLabel <- labelNew (Just "Filtro por Data")
-   dateFilter <- entryNew
+   dbtLabel           <- labelNew (Just "Filtro por Data")
+   dateFilter         <- entryNew
 
    boxPackStart secondBoxFilterBox dbtLabel   PackNatural 0
    boxPackStart secondBoxFilterBox dateFilter PackNatural 0
 
-   dboLabel <- labelNew (Just "Filtro por Operação")
-   opFilter <- entryNew
+   dboLabel           <- labelNew (Just "Filtro por Operação")
+   opFilter           <- entryNew
 
    boxPackStart thirdBoxFilterBox dboLabel   PackNatural 0
    boxPackStart thirdBoxFilterBox opFilter PackNatural 0
@@ -256,57 +256,57 @@ mainWindow = do
    boxPackStart filterBox sepFilter     PackNatural 0
    boxPackStart filterBox filtersBox    PackGrow 0
 --
-   viewBtBtBox <- hButtonBoxNew
+   viewBtBtBox        <- hButtonBoxNew
    set viewBtBtBox [widgetExpand := False]
 
-   renameBtn <- buttonNewWithLabel "Renomear"
+   renameBtn          <- buttonNewWithLabel "Renomear"
    set renameBtn []
- 
-   discardBtn <- buttonNewWithLabel "Descartar"
+
+   discardBtn         <- buttonNewWithLabel "Descartar"
    set discardBtn []
- 
-   summarizeBtn <- buttonNewWithLabel "Sumarizar"
+
+   summarizeBtn       <- buttonNewWithLabel "Sumarizar"
    set summarizeBtn []
- 
-   exitBtn <- buttonNewWithLabel "Sair"
+
+   exitBtn            <- buttonNewWithLabel "Sair"
    set exitBtn []
- 
+
    boxPackStart viewBtBtBox renameBtn    PackNatural 0
    boxPackStart viewBtBtBox discardBtn   PackNatural 0
    boxPackStart viewBtBtBox summarizeBtn PackNatural 0
    boxPackStart viewBtBtBox exitBtn      PackNatural 0
 
-   sepView     <- hSeparatorNew
+   sepView            <- hSeparatorNew
 
-   viewsBox <- vBoxNew False 2
+   viewsBox           <- vBoxNew False 2
    set viewsBox [ widgetHExpand := True
                 , widgetVExpand := True
                 ]
 
-   activeFile <- entryBufferNew (Just "")
-   viewBuffer <- textBufferNew Nothing
-   
-   firstBoxViewsBox <- vBoxNew True 0
+   activeFile         <- entryBufferNew (Just "")
+   viewBuffer         <- textBufferNew Nothing
+
+   firstBoxViewsBox   <- vBoxNew True 0
    set firstBoxViewsBox [ widgetHExpand := True
                         , widgetVExpand := False
                         ]
-   fileInUse <- entryNewWithBuffer activeFile
+   fileInUse          <- entryNewWithBuffer activeFile
    set fileInUse [ widgetExpand := False, entryEditable := False ]
    boxPackStart firstBoxViewsBox fileInUse PackNatural 0
 
-   secondBoxViewsBox <- vBoxNew True 2
+   secondBoxViewsBox  <- vBoxNew True 2
    set secondBoxViewsBox [ widgetHExpand := True
                          , widgetVExpand := True
                          ]
 
-   contentScrolled <- scrolledWindowNew Nothing Nothing
+   contentScrolled    <- scrolledWindowNew Nothing Nothing
    set contentScrolled [ widgetVExpand := True ]
    containerAdd secondBoxViewsBox contentScrolled
 
-   content <- textViewNewWithBuffer viewBuffer
+   content            <- textViewNewWithBuffer viewBuffer
    set content [ widgetVExpand := True, textViewEditable := False ]
    containerAdd contentScrolled content
-   
+
    boxPackStart viewsBox firstBoxViewsBox  PackNatural 1
    boxPackStart viewsBox secondBoxViewsBox PackGrow 1
 
@@ -315,8 +315,8 @@ mainWindow = do
    boxPackStart viewBox viewsBox    PackGrow 0
 
    insertFileListButtonBox (filesBox,viewBuffer,activeFile)
-   
-   doAction destroyWin exitBtn 
+
+   doAction destroyWin exitBtn
    doAction (importFile2bFiltered (window,filesBox,viewBuffer,activeFile))
       importBtn
    doAction
@@ -328,7 +328,7 @@ mainWindow = do
       fileInUse) renameBtn
    doAction (summarizing (window,filesBox,viewBuffer,activeFile)
       fileInUse) summarizeBtn
-   
+
    window `on` deleteEvent $ do
       liftIO mainQuit
       return False
@@ -357,8 +357,7 @@ summarizing (window,parent,viewBuffer,activeFile) fileInUse = do
                   MessageInfo ButtonsNone msg
       dialogAddButton dialog "Ok" ResponseOk
       res <- dialogRun dialog
-      case res of
-         _ -> widgetDestroy dialog 
+      widgetDestroy dialog
    return ()
 
 filtering :: (Window,VBox,TextBuffer,EntryBuffer) -> [Entry] -> IO ()
@@ -369,7 +368,7 @@ filtering (window,parent,viewBuffer,activeFile)
    if null filename then opNotAllowedDialog window msg
    else do
       let rec = getRecords filename
-      let filtered = getOpFilter opFilter 
+      let filtered = getOpFilter opFilter
                      $ getDateFilter dateFilter
                      $ getTickerFilter tickerFilter rec
       let r2l = r2L filtered
@@ -400,7 +399,7 @@ getDateFilter dates rec = do
 
 setActiveFile :: GlibString string => EntryBuffer -> string -> IO ()
 setActiveFile activeFile label = do
-   entryBufferDeleteText activeFile 0 (-100) 
+   entryBufferDeleteText activeFile 0 (-100)
    entryBufferInsertText activeFile 0 label
    return ()
 
@@ -448,10 +447,10 @@ mkFileListButtonBox = do
 
 doAction :: ButtonClass b => IO () -> b -> IO b
 doAction action btn = do
-   btn `on` buttonActivated $ do 
+   btn `on` buttonActivated $ do
       action
    return btn
-   
+
 destroyWin :: IO ()
 destroyWin = do
    liftIO mainQuit
@@ -504,7 +503,7 @@ opNotAllowedDialog window msg = do
 runRenameDialog :: (Window,VBox,TextBuffer,EntryBuffer) -> Entry -> IO ()
 runRenameDialog (window,parent,viewBuffer,activeFile) fileInUse = do
    filename <- entryGetText fileInUse
-   let msg = "Selecione um arquivo primeiro!" 
+   let msg = "Selecione um arquivo primeiro!"
    if null (filename ++ "") then opNotAllowedDialog window msg
    else do
       dialog <- fileChooserDialogNew (Just "Renomear") (Just window)
@@ -522,10 +521,10 @@ runRenameDialog (window,parent,viewBuffer,activeFile) fileInUse = do
                Just path -> do
                   renameFile filename path
                   ffList <- filteredFilesInCurdir (isSuffixOf ".flt")
-                  let searched = [x |x <- ffList,isSuffixOf  x  path]
-                  forM_ searched $ do 
+                  let searched = [x |x <- ffList,x `isSuffixOf` path]
+                  forM_ searched $ do
                                     setActiveFile activeFile
-                                    entrySetText fileInUse 
+                                    entrySetText fileInUse
                   insertFileListButtonBox (parent,viewBuffer,activeFile)
                   widgetDestroy dialog
       return ()
