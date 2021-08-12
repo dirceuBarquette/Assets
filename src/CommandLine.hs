@@ -219,6 +219,6 @@ importPrompt :: Lang -> Prompt
 importPrompt lang = defaultPrompt lang
 
 importPrompt2 :: Lang -> Prompt
-importPrompt2 "en" = "file name to import"
+importPrompt2 "en" = "filename to import"
 importPrompt2 _    = "nome do arquivo para importar"
 -- end prompts

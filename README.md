@@ -33,28 +33,44 @@ Move to Assets directory root
 
 Build and run the project
 
+a) default mode using using a GUI (pt-br)
+
 ```console
 > stack run
 ```
+
+b) text mode in pt-br
+
+```console
+> stack run tui
+```
+
+c) text mode in english
+
+```console
+> stack run tui-en
+```
+
+The instructions below follow the last option:
 
 **Note**: If you don't have `stack` installed yet, go to [install/upgrade - The Haskell Tool Stack](https://docs.haskellstack.org/en/stable/install_and_upgrade/) and follow the instructions to install it.
 
 Then you will see the first screen
 
 ```console
-1 - Importar
-2 - Filtrar
-3 - Sumarizar
-0 - Sair
-digite uma opção > 
+1 - Import
+2 - Filter
+3 - Sumarize
+0 - Exit
+type an option > 
 ```
 
 You first need to import the raw data from your file system, so press **1** to do this.
 
 ```console
-1 - Importar
-0 - Voltar
-digite uma opção >
+1 - Import
+0 - Back
+type an option >
 ```
 
 **Note**: raw data must be formatted in five fields separated by blank spaces. Each individual field must follow these rules below:
@@ -72,37 +88,37 @@ test/examples/few_records.txt
 ...and paste it into the next prompt
 
 ```console
-nome do arquivo para importar > test/examples/few_records.txt
+filename to import > test/examples/few_records.txt
 ```
 
 Then the app will show you everything is fine by displaying a message like this
 
 ```console
-o arquivo imported-2021-05-04.165816.flt está disponível para filtragem
+the file imported-2021-05-04.165816.flt is available for filtering
 ```
 
 From now on, this file will be ready to be filtered as you wish. So your best choice is to type **2** to make it interesting
 
 ```console
-1 - Importar
-2 - Filtrar
-3 - Sumarizar
-0 - Sair
-digite uma opção > 2
+1 - Import
+2 - Filter
+3 - Sumarize
+0 - Exit
+type an option > 2
 ```
 and then the option **1** again to select a file
 
 ```console
-1 - Selecionar arquivo
-0 - Voltar
-digite uma opção > 1
+1 - Select file
+0 - Back
+type an option > 1
 ```
 So, the next display will be
 
 ```console
 1 - imported-2021-05-04.165816.flt
-0 - Voltar
-digite uma opção >
+0 - Back
+type an option >
 ```
 And you should choose **1** to select the file
 
@@ -116,11 +132,11 @@ Let's say that you only want tickers filtered by WEGE3 and ABEV3, you can first 
 following
 
 ```console
-1 - Filtrar por ticker(s). Ex.: ABCD3, ABCD3 EFGH4 KLMN11
-2 - Filtrar por data(s). Ex.: 2019-01-01 2019-12-31, 2020-04-01
-3 - Filtrar por tipo de ordem. Ex.: COMPRA, VENDA
-0 - Voltar
-digite uma opção > 1
+1 - Filter by ticker(s). i.e.: ABCD3, ABCD3 EFGH4 KLMN11
+2 - Filter by date(s). i.e.: 2019-01-01 2019-12-31, 2020-04-01
+3 - Filter by order type. i.e.: COMPRA, VENDA
+0 - Back
+type an option > 1
 
 ```
 
@@ -133,11 +149,11 @@ Filtrar por ticker(s). Ex.: ABCD3, ABCD3 EFGH4 KLMN11 > WEGE3 ABEV3
 The next display shows a new file whose name is prefixed by the term "filtered-" followed by a date and time string like this
 
 ```console
-o arquivo filtered-2021-05-04.174231.flt foi salvo
+the file filtered-2021-05-04.174231.flt is saved
 1 - filtered-2021-05-04.174231.flt
 2 - imported-2021-05-04.165816.flt
-0 - Voltar
-digite uma opção >
+0 - Back
+type an option >
 ```
 
 The contents of file will be:
@@ -155,23 +171,23 @@ The contents of file will be:
 Suppose now that you want to filter this data set again. You just need to choose the same file displayed and enter a date range, for example, as you see below
 
 ```console
-Arquivo carregado: filtered-2021-05-04.174231.flt
-1 - Filtrar por ticker(s). Ex.: ABCD3, ABCD3 EFGH4 KLMN11
-2 - Filtrar por data(s). Ex.: 2019-01-01 2019-12-31, 2020-04-01
-3 - Filtrar por tipo de ordem. Ex.: COMPRA, VENDA
-0 - Voltar
-digite uma opção > 2
+loaded file: filtered-2021-05-04.174231.flt
+1 - Filter by ticker(s). i.e.: ABCD3, ABCD3 EFGH4 KLMN11
+2 - Filter by date(s). i.e.: 2019-01-01 2019-12-31, 2020-04-01
+3 - Filter by order type. i.e.: COMPRA, VENDA
+0 - Back
+type an option > 2
 ```
 
 ```console
-Arquivo carregado: filtered-2021-05-04.174231.flt
-Filtrar por data(s). Ex.: 2019-01-01 2019-12-31, 2020-04-01 > 2019-11-01 2020-02-05
+loaded file: filtered-2021-05-04.174231.flt
+Filter by date(s). i.e.: 2019-01-01 2019-12-31, 2020-04-01 > 2019-11-01 2020-02-05
 ```
 
 The answer will be something like this
 
 ```console
-o arquivo filtered-2021-05-04.175948.flt foi salvo
+the file filtered-2021-05-04.175948.flt is saved
 ```
 
 and the contents of the file
@@ -189,17 +205,17 @@ At the end, you can return to the screens shown before, by just typing **0**.
 By typing 3, you can make a summary report on each filtered data set
 
 ```console
-1 - Importar
-2 - Filtrar
-3 - Sumarizar
-0 - Sair
-digite uma opção > 3
+1 - Import
+2 - Filter
+3 - Sumarize
+0 - Exit
+type an option > 3
 ```
 
 ```console
-1 - Selecionar arquivo
-0 - Voltar
-digite uma opção > 1
+1 - Select file
+0 - Back
+type an option > 1
 ```
 
 ```console
@@ -207,14 +223,14 @@ digite uma opção > 1
 2 - filtered-2021-05-04.174231.flt
 3 - imported-2021-05-04.165816.flt
 4 - filtered-2021-05-04.180402.flt
-0 - Voltar
-digite uma opção > 1
+0 - Back
+type an option > 1
 ```
 
 and then
 
 ```console
-o arquivo summary-2021-05-04.181816.txt foi salvo
+the file summary-2021-05-04.181816.txt is saved
 ```
 
 ```console
