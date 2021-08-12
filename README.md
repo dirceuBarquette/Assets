@@ -88,13 +88,13 @@ test/examples/few_records.txt
 ...and paste it into the next prompt
 
 ```console
-nome do arquivo para importar > test/examples/few_records.txt
+filename to import > test/examples/few_records.txt
 ```
 
 Then the app will show you everything is fine by displaying a message like this
 
 ```console
-o arquivo imported-2021-05-04.165816.flt está disponível para filtragem
+the file imported-2021-05-04.165816.flt is available for filtering
 ```
 
 From now on, this file will be ready to be filtered as you wish. So your best choice is to type **2** to make it interesting
