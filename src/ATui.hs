@@ -42,227 +42,243 @@ import Data.Time
    , ZonedTime
    )
 
-loadMain :: Int -> IO ()
-loadMain option = do
+loadMain :: String -> Int -> IO ()
+loadMain lang option = do
    if option == 0 then
-      putStrLn "Até a próxima!"
+      putStrLn $ if lang == "" then "Até a próxima!" else "See you next time!"
    else
       do 
          newline
-         showScreen option
-         option <- getOption
+         showScreen lang option
+         option <- getOption lang
          if option >= 0 then
             do newline
                case option of
-                  0 -> loadMain 0
-                  1 -> loadImport
-                  2 -> loadFilter
-                  3 -> loadSummarize 2
-                  _ -> loadMain 9
+                  0 -> loadMain lang 0
+                  1 -> loadImport lang
+                  2 -> loadFilter lang
+                  3 -> loadSummarize lang 2
+                  _ -> loadMain lang 9
          else
             do newline
-               putStrLn "Opção inválida"
-               loadMain 9
+               invalidOptStr lang
+               loadMain lang 9
 
-loadSummarize :: Int -> IO ()
-loadSummarize option = do
-   showScreen 3
+loadSummarize :: String -> Int -> IO ()
+loadSummarize lang option = do
+   showScreen lang 3
    if option == 0 then
       do newline
    else
       do 
-         option <- getOption
+         option <- getOption lang
          if option >= 0 then
             do newline
                case option of
-                  1 -> loadSummarize2 2
-                  _ -> loadMain 9
+                  1 -> loadSummarize2 lang 2
+                  _ -> loadMain lang 9
          else
             do newline
-               putStrLn "Opção inválida"
-               loadMain 9
+               invalidOptStr lang
+               loadMain lang 9
 
-loadSummarize2 :: Int -> IO ()
-loadSummarize2 option = do
+loadSummarize2 :: String -> Int -> IO ()
+loadSummarize2 lang option = do
    fileList <- filteredFilesInCurdir (isSuffixOf ".flt")
    putStr $ unlines $ zipWith (\n f -> show n ++ " - " ++ f) [1..] fileList
-   showScreen 26
+   showScreen lang 26
    if option == 0 then
       do newline
    else
       do 
-         option <- getOption
+         option <- getOption lang
          if option >= 0 then
             do newline
                case option of
-                  0 -> loadSummarize 9
+                  0 -> loadSummarize lang 9
                   _ -> if null fileList || option > length fileList then 
-                          loadSummarize 9
-                       else runSummarize (fileList !! (option-1))
+                          loadSummarize lang 9
+                       else runSummarize lang (fileList !! (option-1))
          else
             do newline
-               putStrLn "Opção inválida"
-               loadSummarize2 9
+               invalidOptStr lang
+               loadSummarize2 lang 9
 
-runSummarize :: String -> IO ()
-runSummarize path = do
+runSummarize :: String -> String -> IO ()
+runSummarize lang path = do
    let rec = getRecords path
    let fsumm = fSummarize rec
    let s2l = s2L fsumm
    now <- getZonedTime
    let summarized = makePath ("summary-",".txt") now
    saveRegs2File summarized s2l
-   putStrLn $ "o arquivo " ++ summarized ++ " foi salvo"
-   loadSummarize2 9
+   let (thefile,issaved) = if null lang then ("o arquivo "," foi salvo!")
+                           else ("the file ", " is saved!")
+   putStrLn $ thefile ++ summarized ++ issaved
+   loadSummarize2 lang 9
 
-loadFilter :: IO ()
-loadFilter = do
-   showScreen 2
-   option <- getOption
+loadFilter :: String -> IO ()
+loadFilter lang = do
+   showScreen lang 2
+   option <- getOption lang
    if option >= 0 then
       do newline
          case option of
-            1 -> loadFilter2
-            _ -> loadMain 9
+            1 -> loadFilter2 lang
+            _ -> loadMain lang 9
    else
       do newline
-         putStrLn "Opção inválida"
-         loadMain 9
+         invalidOptStr lang
+         loadMain lang 9
 
-loadFilter2 :: IO ()
-loadFilter2 = do
+loadFilter2 :: String -> IO ()
+loadFilter2 lang = do
    fileList <- filteredFilesInCurdir (isSuffixOf ".flt")
    putStr $ unlines $ zipWith (\n f -> show n ++ " - " ++ f) [1..] fileList
-   showScreen 21
-   option <- getOption
+   showScreen lang 21
+   option <- getOption lang
    if option >= 0 then
       do newline
          case option of
-            0 -> loadFilter
-            9 -> loadFilter
+            0 -> loadFilter lang
+            9 -> loadFilter lang
             _ -> if null fileList || option > length fileList then 
-                    loadFilter
-                 else file2filterLoaded (fileList !! (option-1))
+                    loadFilter lang
+                 else file2filterLoaded lang (fileList !! (option-1))
    else
       do newline
-         putStrLn "Opção inválida"
-         loadFilter2
+         invalidOptStr lang
+         loadFilter2 lang
 
-file2filterLoaded :: String -> IO ()
-file2filterLoaded file = do
-   putStrLn $ "Arquivo carregado: " ++ file
-   showScreen 22
-   option <- getOption
+file2filterLoaded :: String -> String -> IO ()
+file2filterLoaded lang file = do
+   let msg = if null lang then "arquivo carregado: " else "loaded file: "
+   putStrLn $ msg ++ file
+   showScreen lang 22
+   option <- getOption lang
    if option >= 0 then
       do newline
          case option of
-            1 -> loadFilterByTicker file
-            2 -> loadFilterByDate file
-            3 -> loadFilterByOper file
-            _ -> loadFilter2
+            1 -> loadFilterByTicker lang file
+            2 -> loadFilterByDate lang file
+            3 -> loadFilterByOper lang file
+            _ -> loadFilter2 lang
    else
       do newline
-         putStrLn "Opção inválida"
-         loadMain 9
+         invalidOptStr lang
+         loadMain lang 9
 
-loadFilterByOper :: String -> IO ()
-loadFilterByOper file = do
-   putStrLn $ "Arquivo carregado: " ++ file
-   showScreen 25
+loadFilterByOper :: String -> String -> IO ()
+loadFilterByOper lang file = do
+   let msg = if null lang then "arquivo carregado: " else "loaded file: "
+   putStrLn $ msg ++ file
+   showScreen lang 25
    oper <- fixLn
    let oper2upper = map toUpper oper
    newline
    if hasValidOpType oper2upper then
-      runFilterByOper oper2upper file
+      runFilterByOper lang oper2upper file
    else do
-      putStrLn "tipo de ordem inválida!"
+      putStrLn $ if null lang then "tipo de ordem inválida!"
+                  else "Invalid order type!"
       newline
-      file2filterLoaded file
+      file2filterLoaded lang file
 
-runFilterByOper :: String -> String -> IO ()
-runFilterByOper oper path = do
+runFilterByOper :: String -> String -> String -> IO ()
+runFilterByOper lang oper path = do
    let rec = getRecords path
    let filtered = fBo oper rec
-   saveFiltered filtered
+   saveFiltered lang filtered
 
-loadFilterByDate :: String -> IO ()
-loadFilterByDate file = do
-   putStrLn $ "Arquivo carregado: " ++ file
-   showScreen 24
+loadFilterByDate :: String -> String -> IO ()
+loadFilterByDate lang file = do
+   let msg = if null lang then "Arquivo carregado: " else "loaded file: "
+   putStrLn $ msg ++ file
+   showScreen lang 24
    dates <- fixLn
    let parseDates = map hasValidDate $ words dates
    newline
    if and parseDates then
-      runFilterByDate dates file
+      runFilterByDate lang dates file
    else do
-      putStrLn "algo está errado na data!"
+      let err = if null lang then "algo está errado na data!"
+                else "Incorrect date format!"
+      putStrLn err
       newline
-      file2filterLoaded file
+      file2filterLoaded lang file
 
-runFilterByDate :: String -> String -> IO ()
-runFilterByDate dates path = do
+runFilterByDate :: String -> String -> String -> IO ()
+runFilterByDate lang dates path = do
    let rec = getRecords path
    let filtered = fBd dates rec
-   saveFiltered filtered
+   saveFiltered lang filtered
 
-loadFilterByTicker :: String -> IO ()
-loadFilterByTicker file = do
-   putStrLn $ "Arquivo carregado: " ++ file
-   showScreen 23
+loadFilterByTicker :: String -> String -> IO ()
+loadFilterByTicker lang file = do
+   let msg = if null lang then "Arquivo carregado: " else "loaded file: "
+   putStrLn $ msg ++ file
+   showScreen lang 23
    tickers <- fixLn
    newline
-   runFilterByTicker tickers file
+   runFilterByTicker lang tickers file
 
-runFilterByTicker :: String -> String -> IO ()
-runFilterByTicker tickers path = do
+runFilterByTicker :: String -> String -> String -> IO ()
+runFilterByTicker lang tickers path = do
    let rec = getRecords path
    let filtered = fBt tickers rec
-   saveFiltered filtered
+   saveFiltered lang filtered
 
-loadImport :: IO ()
-loadImport = do
-   showScreen 1
-   option <- getOption
+loadImport :: String -> IO ()
+loadImport lang = do
+   showScreen lang 1
+   option <- getOption lang
    if option >= 0 then
       do newline
          case option of
-            1 -> runImport
-            _ -> loadMain 9
+            1 -> runImport lang
+            _ -> loadMain lang 9
    else
       do newline
-         putStrLn "Opção inválida"
-         loadMain 9
+         invalidOptStr lang
+         loadMain lang 9
 
-runImport :: IO ()
-runImport = do 
-   showScreen 11
+runImport :: String -> IO ()
+runImport lang = do 
+   showScreen lang 11
    fileName <- fixLn
    let rec = getRecords fileName
    isEmpty <- null <$> rec
    if isEmpty then do
-      putStrLn $ "Não foi possível ler registros de " ++ fileName
+      let msg = if null lang then "Não foi possível ler registros de "
+                else "can't read registers from "
+      putStrLn $ msg ++ fileName
    else do 
       let r2l = r2L rec
       now <- getZonedTime
       let imported = makePath ("imported-",".flt") now
       saveRegs2File imported r2l
-      putStrLn $ "o arquivo " ++ imported ++ " está disponível para filtragem"
-   loadMain 9
+      let (thefile,isavailable) = if null lang
+                                   then ("o arquivo "," está disponível para filtragem")
+                                  else ("The file "," is available for filtering") 
+      putStrLn $ thefile ++ imported ++ isavailable
+   loadMain lang 9
 
 makePath :: (String,String) -> ZonedTime -> String
 makePath (prefix,suffix) = 
    formatTime defaultTimeLocale format
       where format = prefix ++ "%Y-%m-%d.%H%M%S" ++ suffix
 
-saveFiltered :: IO [Register] -> IO ()
-saveFiltered filtered = do 
+saveFiltered :: String -> IO [Register] -> IO ()
+saveFiltered lang filtered = do 
    let r2l = r2L filtered
    now <- getZonedTime
    let filtered = makePath ("filtered-",".flt") now
    saveRegs2File filtered r2l
-   putStrLn $ "o arquivo " ++ filtered ++ " foi salvo"
+   let (thefile,issaved) = if null lang then ("o arquivo "," foi salvo")
+                            else ("The file "," is saved") 
+   putStrLn $ thefile ++ filtered ++ issaved
    newline
-   loadFilter2
+   loadFilter2 lang
 
 newline :: IO ()
 newline = putChar '\n'
@@ -278,16 +294,17 @@ getNonEmptyChar = do
    v <- getChar
    if isSpace v then getNonEmptyChar else return v
 
-getOption :: IO Int
-getOption = do 
+getOption :: String -> IO Int
+getOption lang = do 
    x <- getNonEmptyChar
    if isDigit x  then
       return (digitToInt x)
    else
       do newline
-         putStrLn "Dígito inválido!"
+         putStrLn $ if null lang then "Dígito inválido!" else "Invalid digit!"
          return 9
 
---main :: IO ()
---main = do hSetBuffering stdout NoBuffering
---          loadMain 9
+invalidOptStr :: String -> IO ()
+invalidOptStr lang | lang == "en" = putStrLn "Invalid option"
+                   | otherwise    = putStrLn "Opção inválida"
+

@@ -32,14 +32,15 @@ import System.Console.ANSI
       )
    )
 
+type Lang     = String
 type Menu     = [String]
 type Prompt   = String
 type Screen   = (Int, (Menu, Prompt))
 
 -- | This function aggregates and shows the menu items available
 -- to interacts with the user
-showScreen :: Int -> IO ()
-showScreen i = do
+showScreen :: Lang -> Int -> IO ()
+showScreen lang i = do
    setSGR [ SetConsoleIntensity BoldIntensity
           , SetColor Foreground Dull White
           ]
@@ -52,146 +53,172 @@ showScreen i = do
           ]
    putStr " > "
    setSGR [Reset]
-      where (Just (menu, prompt)) = lookup i screens
+      where (Just (menu, prompt)) = lookup i (screens lang)
             theMenu   = unlines menu
             thePrompt = prompt
 
-screens :: [Screen]
-screens = [ exitScreen 
-          , mainScreen
-          , importScreen
-          , importScreen2
-          , filterScreen
-          , filterScreen2
-          , file2BeFilteredScreen
-          , filterByTickerScreen
-          , filterByDateScreen
-          , filterByOperScreen
-          , summarizeScreen
-          , summarizeScreen2
-          ]
+screens :: Lang -> [Screen]
+screens lang = [ exitScreen lang
+               , mainScreen lang
+               , importScreen lang
+               , importScreen2 lang
+               , filterScreen lang
+               , filterScreen2 lang
+               , file2BeFilteredScreen lang
+               , filterByTickerScreen lang
+               , filterByDateScreen lang
+               , filterByOperScreen lang
+               , summarizeScreen lang
+               , summarizeScreen2 lang
+               ]
 
 -- begin screens
-exitScreen :: Screen
-exitScreen = (0, (exitMenu, exitPrompt))
+exitScreen :: Lang -> Screen
+exitScreen lang = (0, (exitMenu lang, exitPrompt lang))
 
-filterScreen :: Screen
-filterScreen = (2, (filterMenu, filterPrompt))
+filterScreen :: Lang -> Screen
+filterScreen lang = (2, (filterMenu lang, filterPrompt lang))
 
-summarizeScreen :: Screen
-summarizeScreen = (3, (summarizeMenu, summarizePrompt))
+summarizeScreen :: Lang -> Screen
+summarizeScreen lang = (3, (summarizeMenu lang, summarizePrompt lang))
 
-filterScreen2 :: Screen
-filterScreen2 = (21, (filterMenu2, filterPrompt2))
+filterScreen2 :: Lang -> Screen
+filterScreen2 lang = (21, (filterMenu2 lang, filterPrompt2 lang))
 
-summarizeScreen2 :: Screen
-summarizeScreen2 = (26, (summarizeMenu2, summarizePrompt2))
+summarizeScreen2 :: Lang -> Screen
+summarizeScreen2 lang = (26, (summarizeMenu2 lang, summarizePrompt2 lang))
 
-filterByTickerScreen :: Screen
-filterByTickerScreen = (23, (filterByTickerMenu, filterByTickerPrompt))
+filterByTickerScreen :: Lang -> Screen
+filterByTickerScreen lang = (23, (filterByTickerMenu lang, filterByTickerPrompt lang))
 
-filterByDateScreen :: Screen
-filterByDateScreen = (24, (filterByDateMenu, filterByDatePrompt))
+filterByDateScreen :: Lang -> Screen
+filterByDateScreen lang = (24, (filterByDateMenu lang, filterByDatePrompt lang))
 
-filterByOperScreen :: Screen
-filterByOperScreen = (25, (filterByOperMenu, filterByOperPrompt))
+filterByOperScreen :: Lang -> Screen
+filterByOperScreen lang = (25, (filterByOperMenu lang, filterByOperPrompt lang))
 
-file2BeFilteredScreen :: Screen
-file2BeFilteredScreen = (22, (file2BeFilteredMenu, file2BeFilteredPrompt))
+file2BeFilteredScreen :: Lang -> Screen
+file2BeFilteredScreen lang = (22, (file2BeFilteredMenu lang, file2BeFilteredPrompt lang))
 
-mainScreen :: Screen
-mainScreen = (9, (mainMenu, mainPrompt))
+mainScreen :: Lang -> Screen
+mainScreen lang = (9, (mainMenu lang, mainPrompt lang))
 
-importScreen :: Screen
-importScreen = (1, (importMenu, importPrompt))
+importScreen :: Lang -> Screen
+importScreen lang = (1, (importMenu lang, importPrompt lang))
 
-importScreen2 :: Screen
-importScreen2 = (11, (importMenu2, importPrompt2))
+importScreen2 :: Lang -> Screen
+importScreen2 lang = (11, (importMenu2 lang, importPrompt2 lang))
 -- end screens
 
 -- begin menus
-exitMenu :: Menu
-exitMenu = []
+exitMenu :: Lang -> Menu
+exitMenu "en" = []
+exitMenu _    = []
 
-filterMenu :: Menu
-filterMenu = ["1 - Selecionar arquivo", "0 - Voltar"]
+filterMenu :: Lang -> Menu
+filterMenu "en" = ["1 - Select file", "0 - Back"]
+filterMenu _    = ["1 - Selecionar arquivo", "0 - Voltar"]
 
-summarizeMenu :: Menu
-summarizeMenu = ["1 - Selecionar arquivo", "0 - Voltar"]
+summarizeMenu :: Lang -> Menu
+summarizeMenu "en" = ["1 - Select file", "0 - Back"]
+summarizeMenu _    = ["1 - Selecionar arquivo", "0 - Voltar"]
 
-summarizeMenu2 :: Menu
-summarizeMenu2 = ["0 - Voltar"]
+summarizeMenu2 :: Lang -> Menu
+summarizeMenu2 "en" = ["0 - Back"]
+summarizeMenu2 _    = ["0 - Voltar"]
 
-filterMenu2 :: Menu
-filterMenu2 = ["0 - Voltar"]
+filterMenu2 :: Lang -> Menu
+filterMenu2 "en" = ["0 - Back"]
+filterMenu2 _    = ["0 - Voltar"]
 
-filterByTickerMenu :: Menu
-filterByTickerMenu = []
+filterByTickerMenu :: Lang -> Menu
+filterByTickerMenu "en" = []
+filterByTickerMenu _    = []
 
-filterByDateMenu :: Menu
-filterByDateMenu = []
+filterByDateMenu :: Lang -> Menu
+filterByDateMenu "en" = []
+filterByDateMenu _    = []
 
-filterByOperMenu :: Menu
-filterByOperMenu = []
+filterByOperMenu :: Lang -> Menu
+filterByOperMenu "en" = []
+filterByOperMenu _    = []
 
-file2BeFilteredMenu :: Menu
-file2BeFilteredMenu = 
+file2BeFilteredMenu :: Lang -> Menu
+file2BeFilteredMenu "en" =
+   [ "1 - Filter by ticker(s). i.e.: ABCD3, ABCD3 EFGH4 KLMN11"
+   , "2 - Filter by date(s). i.e.: 2019-01-01 2019-12-31, 2020-04-01"
+   , "3 - Filter by order type. i.e.: COMPRA, VENDA"
+   , "0 - Back"
+   ] 
+file2BeFilteredMenu _    = 
    [ "1 - Filtrar por ticker(s). Ex.: ABCD3, ABCD3 EFGH4 KLMN11"
    , "2 - Filtrar por data(s). Ex.: 2019-01-01 2019-12-31, 2020-04-01"
    , "3 - Filtrar por tipo de ordem. Ex.: COMPRA, VENDA"
    , "0 - Voltar"
    ]
 
-importMenu :: Menu
-importMenu = ["1 - Importar", "0 - Voltar"]
+importMenu :: Lang -> Menu
+importMenu "en" = ["1 - Import", "0 - Back"]
+importMenu _    = ["1 - Importar", "0 - Voltar"]
 
-importMenu2 :: Menu
-importMenu2 = []
+importMenu2 :: Lang -> Menu
+importMenu2 "en" = []
+importMenu2 _    = []
 
-mainMenu :: Menu
-mainMenu = ["1 - Importar", "2 - Filtrar", "3 - Sumarizar","0 - Sair"]
+mainMenu :: Lang -> Menu
+mainMenu "en" = ["1 - Import", "2 - Filter", "3 - Sumarize","0 - Exit"]
+mainMenu _    = ["1 - Importar", "2 - Filtrar", "3 - Sumarizar","0 - Sair"]
 -- end menus
 
 -- begin prompts
-defaultPrompt :: String
-defaultPrompt = "digite uma opção"
+defaultPrompt :: Lang -> String
+defaultPrompt "en" = "type an option"
+defaultPrompt _    = "digite uma opção"
 
-exitPrompt :: Prompt
-exitPrompt = "Até a próxima!"
+exitPrompt :: Lang -> Prompt
+exitPrompt "en" = "See you next time"
+exitPrompt _    = "Até a próxima!"
 
-filterPrompt :: Prompt
-filterPrompt = defaultPrompt
+filterPrompt :: Lang -> Prompt
+filterPrompt lang = defaultPrompt lang
 
-summarizePrompt :: Prompt
-summarizePrompt = defaultPrompt
+summarizePrompt :: Lang -> Prompt
+summarizePrompt lang = defaultPrompt lang
 
-summarizePrompt2 :: Prompt
-summarizePrompt2 = defaultPrompt
+summarizePrompt2 :: Lang -> Prompt
+summarizePrompt2 lang = defaultPrompt lang
 
-filterPrompt2 :: Prompt
-filterPrompt2 = defaultPrompt
+filterPrompt2 :: Lang -> Prompt
+filterPrompt2 lang = defaultPrompt lang
 
-file2BeFilteredPrompt :: Prompt
-file2BeFilteredPrompt = defaultPrompt
+file2BeFilteredPrompt :: Lang -> Prompt
+file2BeFilteredPrompt lang = defaultPrompt lang
 
-filterByTickerPrompt :: Prompt
-filterByTickerPrompt =
+filterByTickerPrompt :: Lang -> Prompt
+filterByTickerPrompt "en" =
+   "Filter by ticker(s). i.e.: ABCD3, ABCD3 EFGH4 KLMN11"
+filterByTickerPrompt _    =
    "Filtrar por ticker(s). Ex.: ABCD3, ABCD3 EFGH4 KLMN11"
 
-filterByDatePrompt :: Prompt
-filterByDatePrompt =
+filterByDatePrompt :: Lang -> Prompt
+filterByDatePrompt "en" =
+   "Filter by date(s). i.e.: 2019-01-01 2019-12-31, 2020-04-01"
+filterByDatePrompt _    =
    "Filtrar por data(s). Ex.: 2019-01-01 2019-12-31, 2020-04-01"
 
-filterByOperPrompt :: Prompt
-filterByOperPrompt =
+filterByOperPrompt :: Lang -> Prompt
+filterByOperPrompt "en" =
+   "Filter by order type. i.e.: COMPRA, VENDA"
+filterByOperPrompt _    =
    "Filtrar por tipo de ordem. Ex.: COMPRA, VENDA"
 
-mainPrompt :: Prompt
-mainPrompt = defaultPrompt
+mainPrompt :: Lang -> Prompt
+mainPrompt lang = defaultPrompt lang
 
-importPrompt :: Prompt
-importPrompt = defaultPrompt
+importPrompt :: Lang -> Prompt
+importPrompt lang = defaultPrompt lang
 
-importPrompt2 :: Prompt
-importPrompt2 = "nome do arquivo para importar"
+importPrompt2 :: Lang -> Prompt
+importPrompt2 "en" = "file name to import"
+importPrompt2 _    = "nome do arquivo para importar"
 -- end prompts

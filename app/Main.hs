@@ -24,6 +24,8 @@ main :: IO ()
 main = do
    args <- getArgs
    case args of
-      [tui] -> do hSetBuffering stdout NoBuffering
-                  loadMain 9
-      _     -> do mainWindow
+      ["tui-en"] -> do hSetBuffering stdout NoBuffering
+                       loadMain "en" 9
+      [tui]      -> do hSetBuffering stdout NoBuffering
+                       loadMain "" 9
+      _          -> do mainWindow
