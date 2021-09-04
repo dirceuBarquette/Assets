@@ -385,7 +385,8 @@ filtering (window,parent,viewBuffer,activeFile)
 getOpFilter :: Entry -> IO [DataTypes.Register] -> IO [DataTypes.Register]
 getOpFilter op rec = do
    opp <- entryGetText op
-   fBo (fmap toUpper opp) rec
+   let uPopp = fmap toUpper opp
+   if hasValidOpType uPopp then fBo uPopp rec else rec
 
 getTickerFilter :: Entry -> IO [DataTypes.Register] -> IO [DataTypes.Register]
 getTickerFilter tickers rec = do
@@ -395,7 +396,8 @@ getTickerFilter tickers rec = do
 getDateFilter :: Entry -> IO [DataTypes.Register] -> IO [DataTypes.Register]
 getDateFilter dates rec = do
    dts <- entryGetText dates
-   fBd dts rec
+   let parseDates = map hasValidDate $ words dts
+   if and parseDates then fBd dts rec else rec
 
 setActiveFile :: GlibString string => EntryBuffer -> string -> IO ()
 setActiveFile activeFile label = do
