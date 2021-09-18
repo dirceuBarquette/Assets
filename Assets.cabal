@@ -4,10 +4,10 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 19f476275aabd274c308fa3fe03399eb8a283a17cfc75ba8ccfafe1b751e86c8
+-- hash: f4a58676d65dc23e88f102229d0cea5fa159da7a67f4791f603fdc1245fe27d7
 
 name:           Assets
-version:        0.3.0.1
+version:        0.3.0.2
 description:    Please see the README on GitHub at <https://github.com/dirceuBarquette/Assets#readme>
 homepage:       https://github.com/dirceuBarquette/Assets#readme
 bug-reports:    https://github.com/dirceuBarquette/Assets/issues
